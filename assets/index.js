@@ -125,8 +125,18 @@ const randNum = max => {
 // clear old message loop & prepare the new loop
 const spoolRequest = () => {
 	const toExecute = document.querySelector('input[name=production]:checked').value
+	let hasValue = 0
 
-	if(toExecute){
+	for (const key in inputs) {
+		let val = inputs[key].value
+		if(!val) continue
+
+		hasValue++
+	}
+
+	if(hasValue < 3) return
+
+	if(toExecute && inputs.count.validity.valid){
 		if(Number(inputs.count.value) >= 1) queued.classList.remove('hidden')
 		queuedCount.innerText = inputs.count.value
 
@@ -149,7 +159,7 @@ const sendMsg = async(recip, body = "Error occured", count = 1, id = null) => {
 	queuedCount.innerText = count
 	if(count < 1) queued.classList.add('hidden')
 
-	// send message to server
+	// send msg to server
 	const res = await fetch(endpoint + `?recip=${recip}&body=${body}\n[00${count}-${uuid()}]`)
 		.then(res => res.json())
 		.catch(error => console.error(error))
@@ -167,4 +177,9 @@ const sendMsg = async(recip, body = "Error occured", count = 1, id = null) => {
 			sendMsg(recip, body, count, id)
 		}, seconds*1000)
 	}
+}
+
+// clear .window contents for easy reading
+const clearResponse = () => {
+	response.innerText = 'Window cleared.\n// No response received yet.'
 }
