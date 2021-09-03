@@ -10,7 +10,7 @@
 </head>
 <body>
 	<header>
-		<div id="company">BoMB<span>Texter</span></div>
+		<div id="company">BoMB&nbsp;<span>Texter</span></div>
 		<div class="toggleContainer">
 			<input type="radio" name="production" value="0" id="Sandbox" checked>
 			<label class="toggleOption checkedPink" tabindex="0" onkeypress="clickThis(this, event)" for="Sandbox">Sandbox</label>
@@ -24,26 +24,43 @@
 	</div>
 	<main>
 		<div class="prefers">
-			<!-- options -->
 			<div class="title">Get Started</div>
 			<div class="subtitle">Have the ability to send a high-volume of texts to a targeted mobile number over a short period of time. This process is known as bomb texting, which can easily be accomplished by using this system.</div>
-			<div class="inputContainer">
-				<input type="text" class="default" id="to" placeholder="Phone number" /*placeholder="Email"*/>
-				<input type="text" class="default" id="body" placeholder="Message body" /*placeholder="String"*/>
-				<input type="text" class="default" id="count" placeholder="Count" /*placeholder="Integer"*/ pattern="\d*">
+			<div class="inputsWrapper">
+				<div class="inputContainer">
+					<label for="to">Phone number</label>
+					<input type="text" class="default" id="to" placeholder="String" title="The phone's email address" onkeyup="fillRequest()">
+				</div>
+				<div class="inputContainer">
+					<label for="body">Message body</label>
+					<input type="text" class="default" id="body" placeholder="String" title="Message you would like to send" onkeyup="fillRequest()" pattern=".{0,140}">
+				</div>
+				<div class="inputContainer">
+					<label for="count">Count</label>
+					<input type="text" class="default" id="count" placeholder="Integer" title="Amount of times to send message" onkeyup="fillRequest()" pattern="0*[0-1]?[0-9]">
+				</div>
 			</div>
-			<input type="button" value="Send Messages" onclick="spoolRequest();"><!-- sendMsg('+17327791147@vzwpix.com', 'Happy Birthday !!', 2, 0) -->
+			<input type="button" value="Send Messages" onclick="spoolRequest();">
 		</div>
 		<div class="feedback">
 			<div class="window primary">
 				<div class="header">
 					<span class="subtitle">Request</span>
 					<span id="queued" class="hidden">•&nbsp;<span id="queuedCount">0</span> queued</span>
-					<a href="Javascript:void(0);" class="icon">
+					<a href="Javascript:void(0);" class="icon" onclick="copyContents('request')">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
 					</a>
 				</div>
-				<div id="request" class="body"># Fill in parameters to get started.</div>
+				<div class="body">
+					<div id="defaultRequest"># Fill in parameters to get started.</div>
+					<div id="request" class="hidden">curl <span id="urlAddress"></span> \<br>
+						&nbsp;&nbsp;-X POST \<br>
+						&nbsp;&nbsp;-H <span class="teal">'Content-Type: application/json'</span> \<br>
+						&nbsp;&nbsp;-d <span class="teal">'{
+						<div id="popuRequest"></div>
+						&nbsp;&nbsp;}'</span>
+					</div>
+				</div>
 			</div>
 			<div class="window">
 				<div class="header">
@@ -57,17 +74,20 @@
 		</div>
 	</main>
 	<button id="themeToggle" onclick="toggleTheme()">
-			<!-- finish -->
-			<svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="theme-switcher__indicator__sun">
-				<rect x="15" y="7" width="1" height="15" rx=".5" transform="rotate(90 15 7)" fill="#FECE70"/>
-				<rect x="8" y="15" width="1" height="15" rx=".5" transform="rotate(-180 8 15)" fill="#FECE70"/>
-				<rect x="12.607" y="2" width="1" height="15" rx=".5" transform="rotate(45 12.607 2)" fill="#FECE70"/>
-				<path d="M12.804 12.097a.5.5 0 1 1-.707.707l-9.9-9.9a.5.5 0 1 1 .707-.707l9.9 9.9z" fill="#FECE70"/>
-				<circle cx="7.5" cy="7.5" r="4" fill="#FFC961" stroke="#fff"/>
-			</svg>
-			<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" class="theme-switcher__indicator__moon">
-				<path d="M9.745 8.67A5.414 5.414 0 0 1 5.006.636c.132-.238-.065-.54-.326-.463a6.549 6.549 0 1 0 8.146 8.148c.078-.26-.224-.457-.462-.326a5.39 5.39 0 0 1-2.619.675z" fill="#7BBFFF"/>
-			</svg>
+		<div id="slider">
+			<div id="knob">
+				<svg width="14" height="14" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="sun">
+					<rect x="15" y="7" width="1" height="15" rx=".5" transform="rotate(90 15 7)" fill="#000"/>
+					<rect x="8" y="15" width="1" height="15" rx=".5" transform="rotate(-180 8 15)" fill="#000"/>
+					<rect x="12.607" y="2" width="1" height="15" rx=".5" transform="rotate(45 12.607 2)" fill="#000"/>
+					<path d="M12.804 12.097a.5.5 0 1 1-.707.707l-9.9-9.9a.5.5 0 1 1 .707-.707l9.9 9.9z" fill="#000"/>
+					<circle cx="7.5" cy="7.5" r="4" fill="#000" stroke="#fff"/>
+				</svg>
+				<svg width="14" height="14" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" class="moon">
+					<path d="M9.745 8.67A5.414 5.414 0 0 1 5.006.636c.132-.238-.065-.54-.326-.463a6.549 6.549 0 1 0 8.146 8.148c.078-.26-.224-.457-.462-.326a5.39 5.39 0 0 1-2.619.675z" fill="#7BBFFF"/>
+				</svg>
+			</div>
+		</div>
 	</button>
 </body>
 </html>
