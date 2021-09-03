@@ -2,13 +2,23 @@
 window.onload = ()=>{
 	const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 	if(userPrefersDark && memory('read', 'darkMode') === undefined || memory('read', 'darkMode')) toggleTheme()
+
+	document.getElementById('urlAddress').innerText = endpoint
 }
 
-const request = document.getElementById('request'),
+const inputs = {
+	'to': document.getElementById('to'),
+	'body': document.getElementById('body'),
+	'count': document.getElementById('count')
+},
+defaultRequest = document.getElementById('defaultRequest'),
+request = document.getElementById('request'),
 response = document.getElementById('response'),
 queuedEl = document.getElementById('queued'),
 queuedCount = document.getElementById('queuedCount'),
-endpoint = 'http://localhost/api/campaign/a73b6940-f80a-4d3f-a92c-fd3dc508a1c8/confirm/' // 'https://romemus.org/sendMessage.php'
+endpoint = 'http://localhost/api/campaign/a73b6940-f80a-4d3f-a92c-fd3dc508a1c8/confirm/'
+// endpoint = 'https://romemus.org/sendMessage.php'
+// endpoint = window.location.protocol+window.location.host+'/api'
 
 let loopID = 0
 
@@ -18,19 +28,19 @@ const memory = (action, key, value = null) => {
 
 	switch (action) {
 		case 'read':
-			return settings[key]
+			return key? settings[key]: settings
 
 		case 'set':
 			if(key) settings[key] = value
 			localStorage.setItem('settings', encodeURI(JSON.stringify(settings)))
 			return settings
 
-		case 'remove':
+		case 'delete':
 			delete settings[key]
 			localStorage.setItem('settings', encodeURI(JSON.stringify(settings)))
 			return settings
 
-		case 'delete':
+		case 'clear':
 			localStorage.removeItem('settings')
 			return null
 
@@ -55,11 +65,51 @@ const toggleTheme = () => {
 	if(isDark){
 		rootTag.classList.remove('dark')
 		memory('set', 'darkMode', 0)
+		document.getElementById('slider').classList.remove('dark')
 	}else{
 		rootTag.classList.add('dark')
 		memory('set', 'darkMode', 1)
+		document.getElementById('slider').classList.add('dark')
 	}
 	return !isDark
+}
+
+// add color to text similar to an IDE
+// const colorCode = () => {
+
+// }
+
+// display the request with parameter values entered
+const fillRequest = () => {
+	const popuRequest = document.getElementById('popuRequest')
+	let hasValue = 0
+
+	// set new params
+	popuRequest.innerHTML = ''
+	for (const key in inputs) {
+		let val = inputs[key].value
+		if(!val) continue
+
+		if(val.match(/\D/)) val = '"'+val+'"'
+		if(hasValue) popuRequest.innerHTML += ',<br>'
+		popuRequest.innerHTML += `&nbsp;&nbsp;&nbsp;&nbsp;"${key}": ${val}`
+		hasValue++
+	}
+
+	// determine whether to display
+	if(hasValue){
+		defaultRequest.classList.add('hidden')
+		request.classList.remove('hidden')
+	}else{
+		defaultRequest.classList.remove('hidden')
+		request.classList.add('hidden')
+	}
+}
+
+// copy element text by #
+const copyContents = id => {
+	const copyText = document.getElementById(id).innerText
+	navigator.clipboard.writeText(copyText)
 }
 
 // generate a uuid
@@ -77,18 +127,11 @@ const spoolRequest = () => {
 	const toExecute = document.querySelector('input[name=production]:checked').value
 
 	if(toExecute){
-		const props = {
-			'to': document.getElementById('to'),
-			'body': document.getElementById('body'),
-			'count': document.getElementById('count')
-		}
-		console.log(Number(props.count.value))
-		
-		if(Number(props.count.value) > 1) queued.classList.remove('hidden')
-		queuedCount.innerText = count
+		if(Number(inputs.count.value) >= 1) queued.classList.remove('hidden')
+		queuedCount.innerText = inputs.count.value
 
 		loopID++
-		sendMsg(to.value, body.value, count.value--, loopID)
+		sendMsg(to.value, body.value, inputs.count.value, loopID)
 
 		// response.innerHTML = ''
 		// update the last child of #response to show current status of round until complete
@@ -112,8 +155,8 @@ const sendMsg = async(recip, body = "Error occured", count = 1, id = null) => {
 		.catch(error => console.error(error))
 
 	// display response
-	if(res.sent) response.innerHTML += ' | Success'
-	
+	if(res.sent) response.innerHTML += loopID+' | Success'
+
 	// start next cycle
 	if(count--){
 		queuedCount.innerText = count

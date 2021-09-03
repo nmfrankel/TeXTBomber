@@ -21,8 +21,10 @@
 	--disabledText: #a6adc2;
 	--borderColor: #a1a4a7;
 	--pink: #E40154;
-	--teal: #178387;
+	--teal: #61FAFF;
+	--toggleTextTeal: #178387;
 	--toggleText: var(--defaultText);
+	--themeIcon: var(--secondaryBackground);
 
 	transition: all ease-in-out .2s;
 }
@@ -37,8 +39,9 @@
 	--disabledText: #a6adc2;
 	--borderColor: #5C6B7D;
 	--pink: #FF85B4;
-	--teal: #61FAFF;
+	--toggleTextTeal: var(--toggleTextTeal);
 	--toggleText: var(--disabledText);
+	--themeIcon: var(--lightBackground);
 }
 html{
 	-webkit-font-smoothing: antialiased;
@@ -64,7 +67,6 @@ header #company{
 	color: var(--mainText);
 }
 header #company span{
-	padding-left: 2px;
 	font-weight: 500;
 	color: var(--defaultText);
 }
@@ -129,7 +131,7 @@ header #company span{
 	color: var(--pink);
 }
 .toggleContainer input[type=radio]:checked + label.toggleOption.checkedTeal{
-	color: var(--teal);
+	color: var(--toggleTextTeal);
 }
 
 main{
@@ -169,35 +171,43 @@ main > div:nth-child(2){
 	line-height: 1.55rem;
 	color: var(--defaultText);
 }
-.inputContainer{
+/* text inputs */
+.inputsWrapper{
 	padding: 1.25rem 0;
+}
+.inputContainer{
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	margin: 1rem 0 3.5rem;
+}
+.inputContainer label{
+	width: 125px;
+	font-size: 18px;
+	color: var(--mainText);
+	border-radius: 8px;
 }
 input[type=text].default{
 	appearance: none;
 	display: block;
-	width: 65%;
-	max-width: 405px;
-	margin: 1rem 0 2rem;
+	flex-grow: 3;
+	margin-left: 3rem;
 	padding: 15px 24px;
 	font-size: 16px;
 	color: var(--mainText);
-	background: var(--background);
 	background: var(--secondaryBackground);
 	border: 1px solid var(--borderColor);
 	border-radius: 8px;
 }
-input[type=text].default.error{
-	box-shadow: 0 0 0 2px var(--pink);
-}
-input[type=text].default:active, input[type=text].default:focus{
-	box-shadow: 0 0 0 2px var(--accent);
-    border: 1px solid transparent;
-	outline: none;
+input[type=text].default.error, input[type=text].default:invalid{
+	box-shadow: 0 0 0 2px var(--pink) !important;
 }
 input[type=text].default::placeholder{
 	color: var(--disabledText);
 }
-
 input[type=button]{
 	-webkit-font-smoothing: antialiased;
 	box-sizing: border-box;
@@ -230,6 +240,7 @@ input[type=button]:hover{
 	height: 18px;
 	width: 18px;
 	padding: 3px;
+	border-radius: 5px;
 	cursor: pointer;
 }
 .window{
@@ -257,17 +268,23 @@ input[type=button]:hover{
 .window .body{
 	height: 250px;
 	padding: 16px;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-	font-size: .95rem;
+	font-family: monospace;
+	font-size: .825rem;
+    line-height: 1.25rem;
 	overflow: auto;
 }
 .window.primary .body{
-	height: 175px;
+	height: 180px;
+	word-wrap: break-word;
+}
+.window .teal{
+	color: var(--teal);
 }
 #queued{
 	transition: all .2s ease;
 }
 .hidden{
+	height: 0px;
 	opacity: 0;
 }
 #themeToggle{
@@ -275,7 +292,55 @@ input[type=button]:hover{
 	position: fixed;
     left: 24px;
 	bottom: 48px;
+	padding: 10px 0;
 	background: transparent;
 	border: none;
 	cursor: pointer;
+}
+#themeToggle #slider{
+	position: relative;
+	width: 40px;
+	height: 9px;
+	border-radius: 8px;
+	/* background: var(--secondaryBackground); */
+	background: var(--themeIcon);
+	box-shadow: 0 2px 10px rgb(0 0 0 / 4%), 0 1px 4px rgb(0 0 0 / 10%), 0 1px 1px rgb(0 0 0 / 4%);
+}
+#themeToggle #slider #knob{
+	position: absolute;
+	top: -8px;
+	left: 0px;
+	height: 24px;
+	width: 24px;
+	background: var(--themeIcon);
+	border-radius: 50%;
+	transition: all ease-in-out .2s;
+	box-shadow: 0 2px 10px rgb(0 0 0 / 4%), 0 1px 4px rgb(0 0 0 / 10%), 0 1px 1px rgb(0 0 0 / 4%);
+}
+#themeToggle #slider.dark #knob{
+	left: 16px;
+}
+#themeToggle #slider #knob .sun, #themeToggle #slider #knob .moon{
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	transition: all ease-in-out .2s;
+}
+#themeToggle #slider #knob .sun{
+	opacity: 1;
+}
+#themeToggle #slider #knob .moon{
+	opacity: 0;
+}
+#themeToggle #slider.dark #knob .sun{
+	opacity: 0;
+}
+#themeToggle #slider.dark #knob .moon{
+	opacity: 1;
+}
+/* :focus & :active */
+input:active, input:focus, .toggleOption:focus, .toggleOption:focus, button:focus, button:active, a:focus, a:active{
+	box-shadow: 0 0 0 2px var(--accent) !important;
+	border: 1px solid transparent;
+	outline: none;
 }
