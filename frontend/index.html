@@ -1,0 +1,119 @@
+<!-- 
+       _         _        _ _ _ _ _ _ _
+     /_/       /_//     /_/_/_/_/_/_/_/
+    /_/_/     /_//_/  /_//_/
+   /_/ /_/   /_/ /_//_/ /_/_ _ _ _
+  /_/   /_/ /_/   /_/  /_/_/_/_/_/
+ /_/     /_/_/        /_/
+/_/       /_/        /_/
+
+	NOSSON M FRANKEL
+	nossonmfrankel@gmail.com
+	ALL RIGHTS RESERVED, 2021
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="./assets/favicon.svg" type="image/x-icon">
+	<link rel="stylesheet" href="./assets/index.css">
+	<script src="./assets/index.js" defer></script>
+	<title>Control Panel | TeXTBomber</title>
+</head>
+<body>
+	<header>
+		<div id="company">TeXT&nbsp;<span>Bomber</span></div>
+		<div class="toggleContainer">
+			<input type="radio" name="production" value="0" id="Sandbox" checked>
+			<label class="toggleOption checkedPink" tabindex="0" onkeypress="clickThis(this, event)" for="Sandbox">Sandbox</label>
+			<input type="radio" name="production" value="1" id="Production">
+			<label class="toggleOption checkedTeal" tabindex="0" onkeypress="clickThis(this, event)" for="Production">Production</label>
+		</div>
+	</header>
+
+	<div id="status">
+		<!-- <div class="statCard">Updated successfully</div>
+		<div class="statCard error">An error occured</div> -->
+	</div>
+
+	<main>
+		<div class="prefers">
+			<div class="title">Get Started</div>
+			<div class="subtitle">Have the ability to send a high-volume of texts to a targeted mobile number over a short period of time. This process is known as bomb texting, which can easily be accomplished by using this system.</div>
+			<div class="inputsWrapper">
+				<div class="inputContainer">
+					<label for="to">Phone number</label>
+					<input type="text" class="default" id="to" placeholder="String" autocomplete="off" title="The phone's email address" onkeyup="fillRequest()" onblur="this.value=formatPhone(this.value);fillRequest();">
+				</div>
+				<div class="inputContainer">
+					<label for="body">Message body</label>
+					<input type="text" class="default" id="body" placeholder="String" autocomplete="off" title="Message you would like to send" onkeyup="fillRequest()" pattern=".{0,128}">
+				</div>
+				<div class="inputContainer">
+					<label for="count">Count</label>
+					<input type="text" class="default" id="count" placeholder="Integer" autocomplete="off" title="Amount of times to send message" onkeyup="fillRequest()" pattern="0*[0-1]?[0-9]|20">
+				</div>
+			</div>
+			<input type="button" value="Send Messages" onclick="spoolRequest()">
+		</div>
+		<div class="feedback">
+			<div class="window primary">
+				<div class="header">
+					<div>
+						<div class="subtitle">Request</div>
+						<span id="queued" class="hidden">•&nbsp;<span id="queuedCount">0</span> queued</span>
+					</div>
+					<div>
+						<a href="Javascript:void(0);" class="icon" onclick="copyContents('request')">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+						</a>
+					</div>
+				</div>
+				<div class="body">
+					<div id="defaultRequest"># Fill in parameters to get started.</div>
+					<div id="request" class="hidden">curl <span id="urlAddress"></span> \<br>
+						&nbsp;&nbsp;-X POST \<br>
+						&nbsp;&nbsp;-H <span class="teal">'Content-Type: application/json'</span> \<br>
+						&nbsp;&nbsp;-d <span class="teal">'{
+						<div id="popuRequest"></div>
+						&nbsp;&nbsp;}'</span>
+					</div>
+				</div>
+			</div>
+			<div class="window">
+				<div class="header">
+					<div class="subtitle">Response</div>
+					<div>
+						<a href="Javascript:void(0);" class="icon" onclick="clearResponse()">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--defaultText)"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z"/></svg>
+						</a>
+						<a href="Javascript:void(0);" class="icon" onclick="copyContents('response')">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--defaultText)"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+						</a>
+					</div>
+				</div>
+				<div id="response" class="body">// No response received yet.</div>
+			</div>
+		</div>
+	</main>
+
+	<button id="themeToggle" onclick="toggleTheme()">
+		<div id="slider">
+			<div id="knob">
+				<svg width="14" height="14" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="sun">
+					<rect x="15" y="7" width="1" height="15" rx=".5" transform="rotate(90 15 7)" fill="#000"/>
+					<rect x="8" y="15" width="1" height="15" rx=".5" transform="rotate(-180 8 15)" fill="#000"/>
+					<rect x="12.607" y="2" width="1" height="15" rx=".5" transform="rotate(45 12.607 2)" fill="#000"/>
+					<path d="M12.804 12.097a.5.5 0 1 1-.707.707l-9.9-9.9a.5.5 0 1 1 .707-.707l9.9 9.9z" fill="#000"/>
+					<circle cx="7.5" cy="7.5" r="4" fill="#000" stroke="#fff"/>
+				</svg>
+				<svg width="14" height="14" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" class="moon">
+					<path d="M9.745 8.67A5.414 5.414 0 0 1 5.006.636c.132-.238-.065-.54-.326-.463a6.549 6.549 0 1 0 8.146 8.148c.078-.26-.224-.457-.462-.326a5.39 5.39 0 0 1-2.619.675z" fill="#7BBFFF"/>
+				</svg>
+			</div>
+		</div>
+	</button>
+
+</body>
+</html>
