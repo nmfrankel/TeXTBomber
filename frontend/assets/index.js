@@ -1,22 +1,18 @@
-// set dark mode if user prefers
+// check list when system starts
 window.onload = ()=>{
+	// display darkMode if preferred
 	const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 	if(userPrefersDark && memory('read', 'darkMode') === undefined || memory('read', 'darkMode')) toggleTheme()
 
+	// display endpoint that will be used 
 	document.getElementById('urlAddress').innerText = endpoint
 
-	// if(memory('read', 'sentCount'))
 	// if user sent over 100 msgs display error that user is blocked
 	// if user sent over 100 msgs display error that user is blocked
 	// if user sent over 100 msgs display error that user is blocked
-	// else memory('write', 'sentCount', 1)
 }
 
-const inputs = {
-	'to': document.getElementById('to'),
-	'body': document.getElementById('body'),
-	'count': document.getElementById('count')
-},
+const inputs = document.forms[0].elements,
 defaultRequest = document.getElementById('defaultRequest'),
 request = document.getElementById('request'),
 response = document.getElementById('response'),
@@ -81,35 +77,57 @@ const toggleTheme = () => {
 
 // format phone number to standard
 const formatPhone = entry => {
+	entry = entry.replace(/[\s\(\)-]/g, '')
 	const validNumber = entry.match(/\(?([2-9]\d{2})\)?[-. ]?(\d{0,3})?[-. ]?(\d{0,4})?\s*$/),
 	validEmail = entry.match(/^[\w0-9.!#$%&’*+\=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
 
 	// make sure info entered not an email
-	if(validNumber[3]) entry = `+1 ${validNumber[1]} ${validNumber[2]}-${validNumber[3]}`
+	if(validNumber?.[3]) entry = `(${validNumber[1]}) ${validNumber[2]}-${validNumber[3]}`
 
 	// invalid entry entered
-	if(!validNumber && !validEmail) console.log('Invalid phone number entered')
+	if(!validNumber && !validEmail) console.log('Invalid phone number & email entered')
 
 	return entry
 }
 
+// copy element text by #
+const copyContents = id => {
+	const copyText = document.getElementById(id).innerText
+	navigator.clipboard.writeText(copyText)
+}
+
+// manage response window
+const createResEl = (txt, err) => {
+	let newRow = document.createElement('div')
+	if(err) newRow.classList.add('error')
+	newRow.innerText = txt
+
+	response.getElementsByClassName('default')[0]?.remove()
+	response.append(newRow)
+}
+
+// clear .window contents for easy reading
+const clearResponse = () => {
+	response.innerHTML = 'Window cleared.<div class="default">// No response received yet.</div>'
+}
+
 // display the request with parameter values entered
 const fillRequest = () => {
-	const popuRequest = document.getElementById('popuRequest')
+	const populRequest = document.getElementById('populRequest')
 	let hasValue = 0
 
 	loopID++
 	queued.classList.add('hidden')
 
 	// set new params
-	popuRequest.innerHTML = ''
+	populRequest.innerHTML = ''
 	for (const key in inputs) {
 		let val = inputs[key].value
-		if(!val) continue
+		if(!val || key >= 0) continue
 
-		if(val.match(/\D/)) val = '"'+val+'"'
-		if(hasValue) popuRequest.innerHTML += ',<br>'
-		popuRequest.innerHTML += `&nbsp;&nbsp;&nbsp;&nbsp;"${key}": ${val}`
+		if(inputs[key].placeholder.toLowerCase() === 'string') val = '"'+val+'"'
+		if(hasValue) populRequest.innerHTML += ',<br>'
+		populRequest.innerHTML += `&nbsp;&nbsp;&nbsp;&nbsp;${key}: <span class="${inputs[key].placeholder.toLowerCase()}">${val}</span>`
 		hasValue++
 	}
 
@@ -121,12 +139,6 @@ const fillRequest = () => {
 		defaultRequest.classList.remove('hidden')
 		request.classList.add('hidden')
 	}
-}
-
-// copy element text by #
-const copyContents = id => {
-	const copyText = document.getElementById(id).innerText
-	navigator.clipboard.writeText(copyText)
 }
 
 // generate random content | CONSIDER IMPROVING
@@ -143,25 +155,28 @@ const uuid = () => {
 	const u = Date.now().toString(16) + Math.random().toString(16)
 	return [u.substr(0,2), u.substr(17, 2)].join('')
 }
+
 // calculate random number
 const randNum = (max = 12) => {
 	return Math.floor(Math.random() * max + 4)
 }
 
-// manage response window
-const manageResponse = () => {
-
-}
-
 // prepare message spool to send
 const spoolRequest = () => {
-	const totalCount = 3
+	// do something if in sandbox mode
+	// document.querySelector('input[name=production]:checked').value
+	
+	if(!document.forms[0].checkValidity()){
+		createResEl('Input value(s) entered are invalid', 1)
+		return
+	}
 
 	queued.classList.remove('hidden')
-	queuedCount.innerText = totalCount
+	queuedCount.innerText = inputs.count.value
 
 	loopID++
-	sendMsg(loopID, inputs.to.value, false, totalCount)
+	memory('write', 'errCount', 0)
+	sendMsg(loopID, inputs.mailto.value, inputs.body.value, inputs.count.value)
 }
 
 // send msg to server to send
@@ -172,7 +187,7 @@ const sendMsg = async(id, mailto, body, count = 1) => {
 	// set fetch info
 	const data = {
 		mailto,
-		body: body+`[${uuid()}-0${('0'+count).slice(-2)}0]`
+		body: body+`[${uuid()}-0${('0'+count).slice(-2)}X]`
 	},
 	options = {
 		method: 'POST',
@@ -186,26 +201,26 @@ const sendMsg = async(id, mailto, body, count = 1) => {
 	const res = await fetch(endpoint, options)
 		.then(res => res.json())
 		.catch(error => console.error(error))
-		// on error retry upto 3 times
-		// on error retry upto 3 times
-		// on error retry upto 3 times
+	console.log(res)// for development
 
-		console.log(res)// for development
-		
-
-	// update 'response' element - on success update sentCount in memory
-	// update 'response' element - on success update sentCount in memory
-	// update 'response' element - on success update sentCount in memory
-	// memory('write', 'sentCount', sentCount++)
+	// process response
+	const wasSuccess = res.errCode===0
+	if(res) createResEl(res.msg, res.errCode)
+	if(wasSuccess){
+		const sentCount = memory('read', 'sentCount') || 0
+		memory('write', 'sentCount', sentCount+1)
+	}else{
+		const errCount = memory('read', 'errCount')
+		memory('write', 'errCount', errCount+1)
+		// do somethign with this info | 'return' after X errors
+	}
 
 	// prepare next msg
-	if(--count){
+	if(--count /* || errCode shows that another attempt won't change anything */){
 		const seconds = randNum()
 		queuedCount.innerText = count+1
 
-		// tell user when next msg will be sent
-		// tell user when next msg will be sent
-		// tell user when next msg will be sent
+		createResEl('Next message '+(!wasSuccess? 'attempt ': '')+'will be sent in '+seconds+' seconds')
 
 		setTimeout(() => {
 			sendMsg(id, mailto, body, count)
@@ -213,40 +228,4 @@ const sendMsg = async(id, mailto, body, count = 1) => {
 	}else{
 		queued.classList.add('hidden')
 	}
-}
-console.error('FINISH: function spoolRequest() && function sendMsg()')
-
-// // clear old message loop & prepare the new loop
-// const spoolRequest = () => {
-// 	const toExecute = document.querySelector('input[name=production]:checked').value
-// 	let hasValue = 0
-
-// 	for (const key in inputs) {
-// 		let val = inputs[key].value
-// 		if(!val) continue
-
-// 		hasValue++
-// 	}
-
-// 	if(hasValue < 3) return
-
-// 	if(toExecute && inputs.count.validity.valid){
-// 		if(Number(inputs.count.value) >= 1) queued.classList.remove('hidden')
-// 		queuedCount.innerText = inputs.count.value
-
-// 		loopID++
-// 		sendMsg(to.value, body.value, inputs.count.value, loopID)
-
-// 		// update the last child of #response to show current status of round until complete
-// 		// highlight the number of messaged left and display the font in system-ui
-// 		// check cache if under 3 times
-// 		// show error and 'return' if over 10 messages (obviously if not on over ride)
-
-// 		// consider changing inputs Object an Array, since most uses it's used with a loop
-// 	}
-// }
-
-// clear .window contents for easy reading
-const clearResponse = () => {
-	response.innerText = 'Window cleared.\n// No response received yet.'
 }

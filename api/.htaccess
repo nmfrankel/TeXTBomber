@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !(.*)
+RewriteRule .*\.php$ router.php [L]
+RewriteRule (.*) router.php [QSA,L] ## %{REQUEST_URI}
+
+DirectoryIndex router.php

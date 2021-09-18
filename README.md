@@ -15,7 +15,7 @@ Follow these simple steps to get started,
 ## Use cases
 
 - A friend challenges you to send him 500 "Happy Birthday" texts 🤣.
-- A mate randomly starts bombarding you with spam texts. When asked to stop, he continues and does not listen 😟.
+- A pal starts bombarding you with spam texts out of the blue. When asked to stop, he continues and does not listen 😟.
 - Any similar case to the previously mentioned cases.
 
 Regardless of your case, you __MUST__ have consent from the recipient of the messages. By not doing so, the user is violating the terms of the license under which this project is public.

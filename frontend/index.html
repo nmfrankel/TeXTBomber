@@ -32,28 +32,25 @@
 		</div>
 	</header>
 
-	<div id="status">
-		<!-- <div class="statCard">Updated successfully</div>
-		<div class="statCard error">An error occured</div> -->
-	</div>
-
 	<main>
 		<div class="prefers">
-			<div class="title">Get Started</div>
+			<div class="title">Start Bombing</div>
 			<div class="subtitle">Have the ability to send a high-volume of texts to a targeted mobile number over a short period of time. This process is known as bomb texting, which can easily be accomplished by using this system.</div>
 			<div class="inputsWrapper">
-				<div class="inputContainer">
-					<label for="to">Phone number</label>
-					<input type="text" class="default" id="to" placeholder="String" autocomplete="off" title="The phone's email address" onkeyup="fillRequest()" onblur="this.value=formatPhone(this.value);fillRequest();">
-				</div>
-				<div class="inputContainer">
-					<label for="body">Message body</label>
-					<input type="text" class="default" id="body" placeholder="String" autocomplete="off" title="Message you would like to send" onkeyup="fillRequest()" pattern=".{0,128}">
-				</div>
-				<div class="inputContainer">
-					<label for="count">Count</label>
-					<input type="text" class="default" id="count" placeholder="Integer" autocomplete="off" title="Amount of times to send message" onkeyup="fillRequest()" pattern="0*[0-1]?[0-9]|20">
-				</div>
+				<form>
+					<div class="inputContainer">
+						<label for="mailto">Phone number</label>
+						<input type="text" class="default" id="mailto" name="mailto" placeholder="String" autocomplete="off" title="The phone's email address" required onkeyup="fillRequest()" onblur="this.value=formatPhone(this.value);fillRequest();">
+					</div>
+					<div class="inputContainer">
+						<label for="body">Message body</label>
+						<input type="text" class="default" id="body" name="body" placeholder="String" autocomplete="off" title="Message you would like to send" onkeyup="fillRequest()" pattern=".{0,128}">
+					</div>
+					<div class="inputContainer">
+						<label for="count">Count</label>
+						<input type="text" class="default" id="count" name="count" placeholder="Integer" autocomplete="off" title="Amount of times to send message" required onkeyup="fillRequest()" pattern="0*[0-1]?[0-9]|20">
+					</div>
+				</form>
 			</div>
 			<input type="button" value="Send Messages" onclick="spoolRequest()">
 		</div>
@@ -75,8 +72,8 @@
 					<div id="request" class="hidden">curl <span id="urlAddress"></span> \<br>
 						&nbsp;&nbsp;-X POST \<br>
 						&nbsp;&nbsp;-H <span class="teal">'Content-Type: application/json'</span> \<br>
-						&nbsp;&nbsp;-d <span class="teal">'{
-						<div id="popuRequest"></div>
+						&nbsp;&nbsp;-d <span>'{
+						<div id="populRequest" class="teal"></div>
 						&nbsp;&nbsp;}'</span>
 					</div>
 				</div>
@@ -93,7 +90,9 @@
 						</a>
 					</div>
 				</div>
-				<div id="response" class="body">// No response received yet.</div>
+				<div id="response" class="body">
+					<div class="default">// No response received yet.</div>
+				</div>
 			</div>
 		</div>
 	</main>
