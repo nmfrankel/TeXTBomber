@@ -14,7 +14,7 @@ class BlockIP{
 		fclose($list);
 		$isBlocked = preg_match("/$searchIP/", $blockedList);
 
-		return $returnBool? intval($isBlocked): [errCode => 0, msg => 'The IP is '.($isBlocked? '': 'not ')."blocked (IP: $searchIP)", blocked => $isBlocked];
+		return $returnBool? intval($isBlocked): [errCode => 0, msg => 'The IP entered is'.($isBlocked? ' ': ' not ')."blocked (IP: $searchIP)", blocked => $isBlocked];
 	}
 
 	// add IP to blocked list
@@ -23,14 +23,14 @@ class BlockIP{
 
 		// check if IP is already blocked
 		if(self::verify($newIP, 1))
-			return [errCode => 1, msg => "IP is already blocked (IP: $newIP)", blocked => 1];
+			return [errCode => 1, msg => "The IP entered is already blocked (IP: $newIP)", blocked => 1];
 
 		// add IP to blocked list
 		$list = fopen("./data/blockedIPs.txt", "w+");
 		fwrite($list, "$newIP\n");
 		fclose($list);
 
-		return [errCode => 0, msg => "IP is now blocked (IP: $newIP)", blocked => 1];
+		return [errCode => 0, msg => "The IP entered is now blocked (IP: $newIP)", blocked => 1];
 	}
 
 	// remove IP from blocked list
@@ -39,7 +39,7 @@ class BlockIP{
 
 		// check if IP is not blocked
 		if(!self::verify($searchIP, 1))
-			return [errCode => 1, msg => "The IP was not blocked (IP: $searchIP)", blocked => 0];
+			return [errCode => 1, msg => "The IP entered was not blocked (IP: $searchIP)", blocked => 0];
 
 		// remove blocked IP from list
 		$list = fopen('./data/blockedIPs.txt', 'r');
@@ -48,6 +48,6 @@ class BlockIP{
 		fwrite($list, str_replace($searchIP, '', $blockedList));	
 		fclose($list);
 
-		return [errCode => 0, msg => "IP is not blocked anymore (IP: $searchIP)", blocked => 0];
+		return [errCode => 0, msg => "The IP entered is not blocked anymore (IP: $searchIP)", blocked => 0];
 	}
 }

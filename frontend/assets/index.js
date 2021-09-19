@@ -1,17 +1,4 @@
-// check list when system starts
-window.onload = ()=>{
-	// display darkMode if preferred
-	const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-	if(userPrefersDark && memory('read', 'darkMode') === undefined || memory('read', 'darkMode')) toggleTheme()
-
-	// display endpoint that will be used 
-	document.getElementById('urlAddress').innerText = endpoint
-
-	// if user sent over 100 msgs display error that user is blocked
-	// if user sent over 100 msgs display error that user is blocked
-	// if user sent over 100 msgs display error that user is blocked
-}
-
+// set vars for use throughout system
 const inputs = document.forms[0].elements,
 defaultRequest = document.getElementById('defaultRequest'),
 request = document.getElementById('request'),
@@ -22,6 +9,19 @@ endpoint = window.location.protocol+'//'+window.location.host+'/api/sendMsg'
 // endpoint = 'https://romemus.org/sendMessage.php'
 
 let loopID = 0
+
+// set basic settings for system to function
+window.onload = ()=>{
+	// display darkMode if preferred
+	const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+	if(userPrefersDark && memory('read', 'darkMode') === undefined || memory('read', 'darkMode')) toggleTheme()
+
+	// display endpoint that will be used 
+	document.getElementById('urlAddress').innerText = endpoint
+
+	// block system if user sent over 100 msgs || allow bypass && set a system timeout
+	if(memory('read', 'sentCount') >= 100) alert('You are over using this system and may not send any more messages, try again later')
+}
 
 // keep track of preferences in storage
 const memory = (action, key, value = null) => {

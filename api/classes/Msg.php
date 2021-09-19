@@ -4,7 +4,7 @@
 class Msg{
 	public function send(){
 		// check if user is overusing system
-		if($_SESSION[usageCount]++ > 100):
+		if($_SESSION[sentCount]++ >= 100):
 			BlockIP::add();
 			return [
 				sent => 0,

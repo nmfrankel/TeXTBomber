@@ -35,7 +35,7 @@
 
 	elseif (preg_match('/\/api\/blockIP\/([^\/]+)\/?/', $req[path], $ip) && $req[method] === 'GET'):
 		$res = array_merge($res, BlockIP::verify(escXSS($ip[1])));
-
+		
 	elseif (in_array($req[path], ['/api/blockIP', '/api/blockIP/']) && $req[method] === 'POST'):
 		$res = array_merge($res, BlockIP::add($_SERVER[REMOTE_ADDR]));
 
