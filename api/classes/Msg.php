@@ -22,9 +22,8 @@ class Msg{
 		$body = escXSS($_POST[body]);
 
 		// retrieve phone's SMS gateway if not included
-		$emailRegex = '/^\+?[0-9]{10,11}@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/';// ^[\w0-9.!#$%&’*+\=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$
-		if(!preg_match($emailRegex, $mailto)){
-			if(!strlen($mailto) === 10 || !strlen($mailto) === 11)
+		if(!filter_var($mailto, FILTER_VALIDATE_EMAIL)){
+			if(strlen($mailto) === 10 || strlen($mailto) === 11)
 				return [sent => 0, errCode => 2, msg => 'The number entered is invalid or unsupported'.generErr()];
 
 			// $mailto = GatewayLookup::search($mailto);
