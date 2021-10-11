@@ -1,3 +1,5 @@
 # to change language of repo
 frontend/assets/favicon.svg linguist-language=PHP
 README.md linguist-language=PHP
+TODO.md linguist-language=PHP
+LICENSE linguist-language=PHP
