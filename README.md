@@ -2,7 +2,7 @@
 
 This open-source repository contains a web app to send a high volume of SMS/MMS messages to a targeted phone number. The benefit of such a web app is highly underrated since the sending of messages is automated, thereby giving you the freedom to do whatever you want.
 
-![Image of interface](https://github.com/nmfrankel/TeXTBomber/blob/main/interface.jpeg?raw=true)
+![Image of interface](https://raw.githubusercontent.com/nmfrankel/TeXTBomber/main/Interface.jpeg)
 
 ## How do I run the TeXTBomber?
 
