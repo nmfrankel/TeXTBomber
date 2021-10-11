@@ -11,18 +11,17 @@ Follow these simple steps to get started,
 2. Go to the URL in your browser of where your files are stored.
 3. You are ready to go running, now fill in the form and click __Send Messages__.
 
-
 ## Use cases
 
 - A friend challenges you to send him 500 "Happy Birthday" texts 🤣.
 - A pal starts bombarding you with spam texts out of the blue. When asked to stop, he continues and does not listen 😟.
 - Any similar case to the previously mentioned cases.
 
-Regardless of your case, you __MUST__ have consent from the recipient of the messages. By not doing so, the user is violating the terms of the license under which this project is public.
+Regardless of your use case, you __MUST__ have consent from the recipient of the messages. By not doing so, the user is violating the terms of the license under which this project is public.
 
 ## Disclaimer
 
-Please use this web app wisely, only when fully sober; the project is __NOT__ to be used to harm anyone in any way. Additionally, the "Bomber" in the project name is used only as a metaphor for the uncontrollable high volume of messages on the receiver's end.
+Please use this web app wisely, only when fully sober; this project is __NOT__ to be used to harm anyone in any way. Additionally, the "Bomber" in the project name is used only as a metaphor for the uncontrollable high volume of messages on the receiver's end.
 
 ## Limitations
 
@@ -30,7 +29,7 @@ Please use this web app wisely, only when fully sober; the project is __NOT__ to
 
 ## Design
 
-I was going for a friendly and straightforward interface, which a person with no previous knowledge can understand. When I came across this [API Explorer](https://github.com/nmfrankel/TeXTBomber/blob/main/developer.squareup.com.jpeg?raw=true) from square payments, I knew it fit the build for this project.
+I was going for a friendly and straightforward interface, which a person with no previous knowledge can understand. When I came across the [API Explorer](https://github.com/nmfrankel/TeXTBomber/blob/main/developer.squareup.com.jpeg?raw=true) of square payments, I knew it fit the design for this project.
 
 ### Resources
 
