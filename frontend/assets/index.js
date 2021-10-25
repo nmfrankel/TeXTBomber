@@ -5,7 +5,7 @@ request = document.getElementById('request'),
 response = document.getElementById('response'),
 queuedEl = document.getElementById('queued'),
 queuedCount = document.getElementById('queuedCount'),
-endpoint = window.location.protocol+'//'+window.location.host+'/api/sendMsg'
+endpoint = window.location.protocol+'//'+window.location.host+'/api/sendMsg/'
 // endpoint = 'https://romemus.org/sendMessage.php'
 
 let loopID = 0
